@@ -1,0 +1,15 @@
+.static-detailes {
+    display: flex;
+    gap: 4rem;
+
+    &__picture {
+        @include black-border;
+        width: 15rem;
+    }
+
+    &__descriptions {
+        @include flex-column;
+        width: 100%;
+        justify-content: center;
+    }
+}

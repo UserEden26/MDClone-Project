@@ -1,0 +1,29 @@
+.blocked {
+    cursor: not-allowed !important;
+}
+
+.black-line {
+    height: 1px;
+    background-color: black;
+    width: 100%;
+    margin: 2rem 0;
+}
+
+.section {
+    @include flex-column;
+    border: 1px solid #000000;
+    padding: 1.5rem;
+    max-height: 20rem;
+    min-height: 15rem;
+
+    &__content {
+        @include flex-column;
+
+        overflow-y: scroll;
+        overflow-x: hidden;
+    }
+}
+
+.flex-spread {
+    @include flex-spread-items;
+}

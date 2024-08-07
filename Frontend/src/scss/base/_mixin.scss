@@ -1,0 +1,25 @@
+@mixin flex-column {
+    display: flex;
+    flex-direction: column;
+}
+
+@mixin black-border {
+    border: 1px solid black;
+}
+
+@mixin flex-spread-items {
+    display: flex;
+    gap: 2rem;
+
+    & p {
+        align-items: center;
+        margin: auto 0;
+
+        min-width: 10rem;
+        max-width: 15rem;
+
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+}

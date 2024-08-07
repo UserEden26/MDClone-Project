@@ -1,0 +1,13 @@
+.dashboard-layout {
+    @include flex-column;
+    @include black-border;
+
+    gap: 2rem;
+    padding: 2rem;
+    max-width: 60%;
+    max-height: 100vh;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    margin: auto;
+    margin-top: 1rem;
+}

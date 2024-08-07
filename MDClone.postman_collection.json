@@ -1,0 +1,536 @@
+{
+	"info": {
+		"_postman_id": "7c5f3d7a-a0f4-48da-af79-438b62a023cb",
+		"name": "MDClone",
+		"description": "Can set `x-custom-header` together with the var in the env, open access to more routes",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "25677356"
+	},
+	"item": [
+		{
+			"name": "Employee",
+			"item": [
+				{
+					"name": "All Employees (UNUSED)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-custom-header",
+								"value": "{{x-custom-header}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}employee",
+							"host": [
+								"{{URL}}employee"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "page",
+									"value": "2",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Employee by id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const responseData = pm.response.json();\r",
+									"\r",
+									"// Check if the employeeId field exists in the response\r",
+									"if (responseData && responseData.email) {\r",
+									"    pm.environment.set('empEmail', responseData.email)\r",
+									"} else {\r",
+									"    console.log('email not found in the response.');\r",
+									"}\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-custom-header",
+								"value": "{{x-custom-header}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}employee/{{employee}}",
+							"host": [
+								"{{URL}}employee"
+							],
+							"path": [
+								"{{employee}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Employee",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Parse the response body\r",
+									"const responseData = pm.response.json();\r",
+									"\r",
+									"// Check if the employeeId field exists in the response\r",
+									"if (responseData && responseData.employeeId) {\r",
+									"    // Set the value of the id variable to the employeeId field from the response\r",
+									"    pm.environment.set('employee', responseData.employeeId);\r",
+									"    pm.environment.set('empEmail', responseData.email)\r",
+									"    // You can also use pm.globals.set('id', responseData.employeeId); to set it globally\r",
+									"    console.log('id set to:', responseData.employeeId);\r",
+									"} else {\r",
+									"    console.log('employeeId not found in the response.');\r",
+									"}\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-custom-header",
+								"value": "{{x-custom-header}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"{{$randomFirstName}}\",\r\n    \"email\":\"{{$randomEmail}}\",\r\n    \"password\": \"11111111\",\r\n    \"lastName\": \"{{$randomLastName}}\",\r\n    \"position\":\"{{$randomJobTitle}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}employee",
+							"host": [
+								"{{URL}}employee"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Employee by id (UNUSED)",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "x-custom-header",
+								"value": "{{x-custom-header}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}employee/1",
+							"host": [
+								"{{URL}}employee"
+							],
+							"path": [
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Employee By Id (UNUSED)",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "x-custom-header",
+								"value": "{{x-custom-header}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}employee/1",
+							"host": [
+								"{{URL}}employee"
+							],
+							"path": [
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "EmployeesRelations",
+			"item": [
+				{
+					"name": "get employee relations - need cookie",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-custom-header",
+								"value": "{{x-custom-header}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}employees-relations/92",
+							"host": [
+								"{{URL}}employees-relations"
+							],
+							"path": [
+								"92"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get employees by Cookie",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}employees-relations",
+							"host": [
+								"{{URL}}employees-relations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create employess connection",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-custom-header",
+								"value": "1234",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"managerId\": 1325,\r\n    \"employeeIds\": [{{employee}}]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}employees-relations",
+							"host": [
+								"{{URL}}employees-relations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete employee-relation (UNUSED)",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}employees-relations/3",
+							"host": [
+								"{{URL}}employees-relations"
+							],
+							"path": [
+								"3"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Tasks",
+			"item": [
+				{
+					"name": "Get Tasks with Query params",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-custom-header",
+								"value": "{{x-custom-header}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}task",
+							"host": [
+								"{{URL}}task"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "limit",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "forEmp",
+									"value": "{{employee}}",
+									"description": "generaly comes from the cookie, you can ask for anothr user tasks as well",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add task (Manager for Employee)",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// Helper function to generate a random future date\r",
+									"function getRandomFutureDate() {\r",
+									"    // Get the current date\r",
+									"    const now = new Date();\r",
+									"    \r",
+									"    // Generate a random number of days to add (e.g., 1 to 365 days)\r",
+									"    const randomDays = Math.floor(Math.random() * 365) + 1;\r",
+									"    \r",
+									"    // Create a future date by adding random days to the current date\r",
+									"    const futureDate = new Date();\r",
+									"    futureDate.setDate(now.getDate() + randomDays);\r",
+									"    \r",
+									"    return futureDate;\r",
+									"}\r",
+									"\r",
+									"// Generate a random future date\r",
+									"const randomDateFuture = getRandomFutureDate();\r",
+									"const currentDate = new Date().toISOString()\r",
+									"// Convert the date to ISO 8601 format\r",
+									"const isoDate = randomDateFuture.toISOString();\r",
+									"// Set the ISO 8601 date as an environment variable\r",
+									"pm.environment.set('isoDate', isoDate);\r",
+									"pm.environment.set('currentDate', currentDate)\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-custom-header",
+								"value": "{{x-custom-header}}",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"employeeId\": {{employee}},\r\n    \"taskText\":\"{{$randomLoremText}}\",\r\n    \"dueDate\":\"{{isoDate}}\",\r\n    \"assignDate\": \"{{currentDate}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}task",
+							"host": [
+								"{{URL}}task"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Login - Generate a Cookie",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-custom-header",
+								"value": "{{x-custom-header}}",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\":\"{{empEmail}}\",\r\n    \"password\": \"11111111\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}auth/login",
+							"host": [
+								"{{URL}}auth"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "Auth uses the jwtService and the employee service to find user by email and match hassed password.  \n  \nrequired body: `{ password: string, email: string (valid email) }`\n\nFails:\n\n1. no match between password and email.\n    \n2. password length (8 - 20) chars.\n    \n3. validations errors for email"
+		},
+		{
+			"name": "Reports",
+			"item": [
+				{
+					"name": "Get my reports - need cookie (UNUSED)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-custom-header",
+								"value": "1234",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{URL}}report/my-reports",
+							"host": [
+								"{{URL}}report"
+							],
+							"path": [
+								"my-reports"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get reports by employee id",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-custom-header",
+								"value": "1234",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{URL}}report/employee/{{employee}}",
+							"host": [
+								"{{URL}}report"
+							],
+							"path": [
+								"employee",
+								"{{employee}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Report for manager - need cookie",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const currentDate = new Date().toISOString()\r",
+									"pm.environment.set('currentDate', currentDate)"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-custom-header",
+								"value": "1234",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"reportText\": \"{{$randomLoremText}}\",\r\n    \"reportDate\": \"{{currentDate}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}report/{{employee}}",
+							"host": [
+								"{{URL}}report"
+							],
+							"path": [
+								"{{employee}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "## Comunication With Employees Reports:\n\nEndpoints prefix: 'reports'"
+		}
+	]
+}

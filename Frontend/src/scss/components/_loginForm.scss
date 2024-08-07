@@ -1,0 +1,12 @@
+.login-form {
+    @include flex-column;
+    width: 100%;
+    align-items: center;
+
+    &__form-group {
+        @include flex-column;
+
+        width: 100%;
+        gap: 0.5rem;
+    }
+}
