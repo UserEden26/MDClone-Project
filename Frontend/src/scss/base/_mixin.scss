@@ -22,4 +22,8 @@
         overflow: hidden;
         text-overflow: ellipsis;
     }
+
+    & strong {
+        margin: auto 0;
+    }
 }

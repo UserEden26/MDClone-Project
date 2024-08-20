@@ -7,19 +7,25 @@ import { Employee } from './employee.entity';
 import { isNotExsistThrows } from '../../utils/isNotExsistThrows';
 import { hashPassword } from '../../utils/encrypt';
 import { excludeColumns } from '../../utils/excludeColumns';
-import { Cache } from 'cache-manager';
-import { CACHE_MANAGER } from '@nestjs/cache-manager';
-import { IPagination } from 'shared/interfaces/pagination.interface';
+import { IReturnPagination } from 'shared/interfaces/pagination.interface';
+import {
+  IEmployeeExternal,
+  IEmployeeWithoutPassword,
+} from 'shared/interfaces/employee.interface';
+import { plainToInstance } from 'class-transformer';
+import { NoPasswordEmployeeDto } from '../../shared/no-password-employee.dto';
+import { PaginationDto } from '../../shared/pagination-dto';
+import { CacheService } from '../cache/cache.service';
 
 @Injectable()
 export class EmployeeService {
   constructor(
     @InjectRepository(Employee)
     private employeeRepository: Repository<Employee>,
-    @Inject(CACHE_MANAGER) private cacheManager: Cache,
+    @Inject() private cacheService: CacheService,
   ) {}
 
-  async isEmployeeNotExsistThrows(id: number): Promise<Employee> {
+  async isEmployeeNotExsistThrows(id: number) {
     return isNotExsistThrows({
       value: await this.findOne(id),
     });
@@ -43,15 +49,19 @@ export class EmployeeService {
     return employeeWithoutPassword;
   }
 
-  async findAllByPages(queryParams: IPagination) {
+  async findAllByPages(
+    queryParams: PaginationDto,
+  ): Promise<IReturnPagination<IEmployeeWithoutPassword>> {
     const { limit, page } = queryParams;
     const [results, total] = await this.employeeRepository.findAndCount({
       skip: (page - 1) * limit,
       take: limit,
     });
-    const finalResults = results.map((emp) =>
-      excludeColumns(emp, ['hashedPassword']),
-    );
+
+    const finalResults = plainToInstance(NoPasswordEmployeeDto, results, {
+      excludeExtraneousValues: true,
+    });
+
     return {
       data: finalResults,
       total,
@@ -61,14 +71,6 @@ export class EmployeeService {
   }
 
   async findOne(id: number): Promise<Employee | null> {
-    const cahceEmployee = await this.cacheManager.get<Employee>(
-      `employee:${id}`,
-    );
-
-    if (cahceEmployee) {
-      return cahceEmployee;
-    }
-
     const employee = await this.employeeRepository.findOneBy({
       employeeId: id,
     });
@@ -77,7 +79,7 @@ export class EmployeeService {
   }
 
   async findOneByEmail(email: string): Promise<Employee | null> {
-    const cahceUser = await this.cacheManager.get<Employee>(email);
+    const cahceUser = await this.cacheService.get<Employee>(email);
     if (cahceUser) {
       return cahceUser;
     }
@@ -85,8 +87,66 @@ export class EmployeeService {
       email,
     });
 
-    await this.cacheManager.set(email, dbEmployee);
+    await this.cacheService.set(email, dbEmployee);
     return dbEmployee;
+  }
+
+  async findEmployeeRelations(employeeId: number) {
+    const cahceEmployee = await this.cacheService.getEmployee(employeeId);
+
+    if (cahceEmployee) {
+      return cahceEmployee;
+    }
+
+    const employee = await this.employeeRepository.findOne({
+      where: { employeeId: employeeId },
+      relations: [
+        'managedEmployees',
+        'managedEmployees.employee',
+        'managers',
+        'managers.manager',
+      ],
+    });
+
+    if (!employee) {
+      return null;
+    }
+
+    const employeeStatic = plainToInstance(NoPasswordEmployeeDto, employee, {
+      excludeExtraneousValues: true,
+    });
+
+    let manager: IEmployeeWithoutPassword | null = null;
+    let managedEmployees: IEmployeeWithoutPassword[] | [] = [];
+    // Transform the manager if it exists
+    if (employee.managers && employee.managers.length > 0) {
+      manager = plainToInstance(
+        NoPasswordEmployeeDto,
+        employee.managers[0].manager,
+        {
+          excludeExtraneousValues: true,
+        },
+      );
+    }
+
+    // Transform each managed employee
+    if (employee.managedEmployees && employee.managedEmployees.length > 0) {
+      managedEmployees = employee.managedEmployees.map((relation: any) =>
+        plainToInstance(NoPasswordEmployeeDto, relation.employee, {
+          excludeExtraneousValues: true,
+        }),
+      );
+    }
+
+    const returnObj: IEmployeeExternal & IEmployeeWithoutPassword = {
+      ...employeeStatic,
+      manager,
+      managedEmployees,
+    };
+
+    await this.cacheService.set(`employee:${employeeId}`, returnObj);
+
+    return returnObj;
   }
 
   async update(id: number, updateEmployeeDto: UpdateEmployeeDto) {

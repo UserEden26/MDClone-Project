@@ -22,6 +22,12 @@ RUN npm install
 # Build the app
 RUN npm run build
 
+# Remove node_modules to ensure a clean production install
+RUN rm -rf node_modules
+
+# Install production dependencies only
+RUN npm ci --only=production
+
 # Expose the port the app runs on
 EXPOSE 3000
 

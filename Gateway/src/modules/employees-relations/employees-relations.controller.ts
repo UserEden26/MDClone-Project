@@ -65,20 +65,20 @@ export class EmployeesRelationsController {
     return managerEmployees;
   }
 
+  @Get('/me')
+  @UseGuards(NoAdminGuard)
+  async getMe(@Req() request: Request) {
+    return await this.employeesRelationsService.getManagerAndEmployees(
+      request.userId as number,
+    );
+  }
+
   @Get(':id')
   async getRelations(
     @Param('id', ParseIntPipe) employeeId: number,
   ): Promise<IEmployeeExternal & IEmployeeWithoutPassword> {
     return await this.employeesRelationsService.getManagerAndEmployees(
       employeeId,
-    );
-  }
-
-  @Get('/me')
-  @UseGuards(NoAdminGuard)
-  async getMe(@Req() request: Request) {
-    return await this.employeesRelationsService.getManagerAndEmployees(
-      request.userId as number,
     );
   }
 }

@@ -5,6 +5,7 @@ import Button from '../generic/Button';
 import useFethPages from '../../hooks/useFethPages';
 import { IEmployeeId } from '../../interfaces/employeeId.interface';
 import { IMinimazedTask } from '../../interfaces/task.interface';
+import { formatDate } from '../../utils/timeFormatter';
 
 const Tasks = ({ employeeId }: IEmployeeId) => {
     const {
@@ -19,9 +20,8 @@ const Tasks = ({ employeeId }: IEmployeeId) => {
         getTasks,
         { forEmp: employeeId },
         {
-            refetchOnWindowFocus: false,
-            refetchOnReconnect: false,
-            retry: false,
+            refetchOnWindowFocus: true,
+            refetchOnReconnect: true,
         }
     );
 
@@ -49,7 +49,7 @@ const Tasks = ({ employeeId }: IEmployeeId) => {
                                         key={`task-${task.taskId}`}
                                     >
                                         <p>{task.taskText}</p>{' '}
-                                        <p>{task.dueDate}</p>
+                                        <p>{formatDate(task.dueDate)}</p>
                                     </li>
                                 ))}
                             </React.Fragment>

@@ -14,14 +14,13 @@ import { isNotExsistThrows } from '../../utils/isNotExsistThrows';
 import {
   IEmployeeExternal,
   IEmployeeWithoutPassword,
-  ReturnEmployeeType,
 } from 'shared/interfaces/employee.interface';
 import { Employee } from '../employee/employee.entity';
-import {
-  IPagination,
-  IReturnPagination,
-} from 'shared/interfaces/pagination.interface';
+import { IReturnPagination } from 'shared/interfaces/pagination.interface';
 import { CacheService } from '../cache/cache.service';
+import { PaginationDto } from '../../shared/pagination-dto';
+import { plainToInstance } from 'class-transformer';
+import { NoPasswordEmployeeDto } from '../../shared/no-password-employee.dto';
 
 @Injectable()
 export class EmployeesRelationsService {
@@ -103,12 +102,6 @@ export class EmployeesRelationsService {
     return 'delete';
   }
 
-  async getFromCache(employeeId: number): Promise<ReturnEmployeeType | null> {
-    return await this.cacheService.get<ReturnEmployeeType>(
-      `employee:${employeeId}`,
-    );
-  }
-
   async noRelations(employeeId: number) {
     const employee =
       await this.employeeService.isEmployeeNotExsistThrows(employeeId);
@@ -125,7 +118,7 @@ export class EmployeesRelationsService {
   }
 
   async getManager(employeeId: number) {
-    const fromCahce = await this.getFromCache(employeeId);
+    const fromCahce = await this.cacheService.getEmployee(employeeId);
     if (fromCahce) {
       return fromCahce.manager;
     }
@@ -151,7 +144,7 @@ export class EmployeesRelationsService {
 
   async getManagerEmployeesPagenation(
     managerId: number,
-    queryParams: IPagination,
+    queryParams: PaginationDto,
   ): Promise<IReturnPagination<IEmployeeWithoutPassword>> {
     const { limit, page } = queryParams;
     const [results, total] =
@@ -164,6 +157,7 @@ export class EmployeesRelationsService {
     const employees = results.map((rel) =>
       this.employeeTransform(rel.employee),
     );
+
     return {
       data: employees,
       total,
@@ -173,7 +167,7 @@ export class EmployeesRelationsService {
   }
 
   async getFirstEmployeeMatch(employeeId: number) {
-    const cacheEmployee = await this.getFromCache(employeeId);
+    const cacheEmployee = await this.cacheService.getEmployee(employeeId);
 
     if (cacheEmployee && cacheEmployee.managedEmployees) {
       return cacheEmployee.managedEmployees[0];
@@ -186,56 +180,34 @@ export class EmployeesRelationsService {
 
   employeeTransform(emp: Employee | null): IEmployeeWithoutPassword | null {
     return emp
-      ? {
-          employeeId: emp.employeeId,
-          employeeName: emp.employeeName,
-          position: emp.position,
-          email: emp.email,
-          employeeLastName: emp.employeeLastName,
-        }
+      ? plainToInstance(NoPasswordEmployeeDto, emp, {
+          excludeExtraneousValues: true,
+        })
       : null;
   }
 
   async getManagerAndEmployees(
     employeeId: number,
   ): Promise<IEmployeeExternal & IEmployeeWithoutPassword> {
-    const cacheValue = await this.getFromCache(employeeId);
+    const employeeWithRelations =
+      await this.employeeService.findEmployeeRelations(employeeId);
 
-    if (cacheValue) {
-      return cacheValue;
-    }
-    // Find the relation where the employee is managed
-    const relations = await this.managerEmployeeRelationRepository.find({
-      where: { employee: { employeeId } },
-      relations: ['manager', 'employee'],
-    });
-
-    if (relations.length === 0) {
-      return await this.noRelations(employeeId);
+    if (!employeeWithRelations) {
+      throw new NotFoundException(
+        `Employee with id ${employeeId} was not found`,
+      );
     }
 
-    // Extract the manager and employees
-    const manager = relations[0].manager;
-    const managedEmployees = await this.getAllEmployees(employeeId);
-    const transformEmployess = managedEmployees.map((emp) =>
-      this.employeeTransform(emp),
-    );
-
-    const transformEpmloyee = this.employeeTransform(relations[0].employee);
-    const returnObj = {
-      manager: this.employeeTransform(manager),
-      managedEmployees: transformEmployess,
-      ...transformEpmloyee,
-    };
-
-    return returnObj;
+    return employeeWithRelations;
   }
 
   async updateRelationInCache(
     emps: IEmployeeWithoutPassword[],
     manager: IEmployeeWithoutPassword,
   ) {
-    const managerCache = await this.getFromCache(manager.employeeId);
+    const managerCache = await this.cacheService.getEmployee(
+      manager.employeeId,
+    );
     if (managerCache) {
       managerCache.managedEmployees = [
         ...managerCache.managedEmployees,
@@ -248,7 +220,7 @@ export class EmployeesRelationsService {
     }
 
     for (const i of emps) {
-      const empCache = await this.getFromCache(i.employeeId);
+      const empCache = await this.cacheService.getEmployee(i.employeeId);
       if (empCache) {
         empCache.manager = manager;
         await this.cacheService.set(

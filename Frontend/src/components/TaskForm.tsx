@@ -107,6 +107,7 @@ const TaskForm = (props: ITaskForm) => {
             {isError && <FormError message={errorMessage!} />}
 
             <Button
+                type="submit"
                 disabled={hasErrors || isError}
                 title={hasErrors ? 'Please fill the form properly.' : undefined}
             >

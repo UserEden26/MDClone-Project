@@ -16,6 +16,9 @@ COPY . .
 # Build the application
 RUN npm run build
 
+# Remove node_modules to ensure a clean production install
+RUN rm -rf node_modules
+
 # Install production dependencies only
 RUN npm ci --only=production
 

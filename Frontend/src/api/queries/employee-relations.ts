@@ -16,6 +16,6 @@ export const getEmployeeRelations = async (employeeId: number) => {
 export const getMyOptions = async () => {
     const response = await axiosInstance.get<
         IEmployeeWithoutPassword & IEmployeeExternal
-    >(`${employeePrefix}`);
+    >(`${employeePrefix}/me`);
     return response.data;
 };

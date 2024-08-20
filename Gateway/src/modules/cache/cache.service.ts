@@ -1,6 +1,10 @@
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { Cache } from 'cache-manager';
+import {
+  IEmployeeExternal,
+  IEmployeeWithoutPassword,
+} from 'shared/interfaces/employee.interface';
 
 @Injectable()
 export class CacheService {
@@ -44,5 +48,11 @@ export class CacheService {
     } catch (error) {
       this.logger.error(`Failed to reset cache`, error.stack);
     }
+  }
+
+  async getEmployee(employeeId: number) {
+    return await this.get<IEmployeeExternal & IEmployeeWithoutPassword>(
+      `employee:${employeeId}`,
+    );
   }
 }

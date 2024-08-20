@@ -12,11 +12,9 @@ const EmployeeStaticDetails = ({ employeeId }: IEmployeeId) => {
     const [employeeIdForPopup, setEmployeeIdForPopup] = useState(0);
     const closePopup = () => setEmployeeIdForPopup(0);
     const myData = useMyData();
+
     const canSendReport = Boolean(
-        data &&
-            data.manager &&
-            myData &&
-            myData.employeeId == data.manager.employeeId
+        data && data.manager && myData && myData.employeeId == data.employeeId
     );
 
     if (isLoading) return <p>loading...</p>;
@@ -55,10 +53,10 @@ const EmployeeStaticDetails = ({ employeeId }: IEmployeeId) => {
                                             }
                                             title={
                                                 !canSendReport
-                                                    ? 'You are not this employee manager'
+                                                    ? 'You are not this manager employee'
                                                     : ''
                                             }
-                                            disabled={canSendReport}
+                                            disabled={!canSendReport}
                                             onClick={() =>
                                                 canSendReport &&
                                                 setEmployeeIdForPopup(

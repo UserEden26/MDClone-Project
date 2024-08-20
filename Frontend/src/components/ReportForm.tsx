@@ -67,6 +67,7 @@ const ReportForm = (props: IReportForm) => {
             {isError && <FormError message={errorMessage!} />}
 
             <Button
+                type="submit"
                 disabled={hasErrors || isError}
                 className="blocked"
                 title={hasErrors ? 'Please fill the form properly.' : undefined}

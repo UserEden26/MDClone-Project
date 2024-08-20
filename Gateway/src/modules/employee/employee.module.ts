@@ -4,13 +4,13 @@ import { EmployeeController } from './employee.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Employee } from './employee.entity';
 import { EmployeesRlationsModule } from '../employees-relations/employees-relations.module';
-import { CacheModule } from '@nestjs/cache-manager';
+import { CustomCacheModule } from '../cache/cache.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Employee]),
     forwardRef(() => EmployeesRlationsModule),
-    CacheModule.register({ ttl: 7200000 }),
+    CustomCacheModule,
   ],
   controllers: [EmployeeController],
   providers: [EmployeeService],

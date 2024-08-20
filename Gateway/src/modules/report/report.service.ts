@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Report } from './report.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { IPagination } from 'shared/interfaces/pagination.interface';
+import { PaginationDto } from '../../shared/pagination-dto';
 
 @Injectable()
 export class ReportService {
@@ -14,13 +14,14 @@ export class ReportService {
     const newReport = this.reportRepository.create({
       relation: { id: relationId },
       reportText,
+      reportDate: new Date().toISOString(),
     });
 
     await this.reportRepository.save(newReport);
     return newReport;
   }
 
-  async findMyReports(managerId: number, queryParams: IPagination) {
+  async findMyReports(managerId: number, queryParams: PaginationDto) {
     const { limit, page } = queryParams;
     const [results, total] = await this.reportRepository.findAndCount({
       where: { relation: { manager: { employeeId: managerId } } },
@@ -28,9 +29,9 @@ export class ReportService {
       skip: (page - 1) * limit,
       take: limit,
     });
-    results.forEach((i) => {
-      delete i.relation.employee.hashedPassword;
-      delete i.relation.id;
+    results.forEach((queryResult) => {
+      delete queryResult.relation.employee.hashedPassword;
+      delete queryResult.relation.id;
     });
     return {
       data: results,

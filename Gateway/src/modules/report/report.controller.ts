@@ -20,7 +20,7 @@ import { EmployeesRelationsService } from '../employees-relations/employees-rela
 import { Request } from 'express';
 import { PaginationDto } from '../../shared/pagination-dto';
 
-@Controller('reports')
+@Controller('report')
 export class ReportController {
   constructor(
     private readonly reportService: ReportService,
@@ -67,8 +67,8 @@ export class ReportController {
     @Req() request: Request,
   ) {
     const relation = await this.employeeRelationService.getRlation(
-      request.userId as number,
       createReportDto.employeeId,
+      request.userId as number,
     );
     if (!relation) {
       throw new NotFoundException('This connection does not exist');

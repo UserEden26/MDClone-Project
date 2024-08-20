@@ -5,7 +5,7 @@ import { Repository } from 'typeorm';
 import { Task } from './task.entity';
 import { TASK_STAGE } from 'shared/interfaces/enums';
 import { isNotExsistThrows } from '../../utils/isNotExsistThrows';
-import { IPagination } from 'shared/interfaces/pagination.interface';
+import { PaginationDto } from '../../shared/pagination-dto';
 
 @Injectable()
 export class TaskService {
@@ -26,7 +26,7 @@ export class TaskService {
     return newTask;
   }
 
-  async findEmployeeTasks(employeeId: number, queryParams: IPagination) {
+  async findEmployeeTasks(employeeId: number, queryParams: PaginationDto) {
     const { limit, page } = queryParams;
     const [results, total] = await this.taskRepository.findAndCount({
       skip: (page - 1) * limit,

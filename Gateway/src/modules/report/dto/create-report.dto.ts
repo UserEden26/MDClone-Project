@@ -1,5 +1,5 @@
 import { IsInt, IsNotEmpty, IsPositive, IsString } from 'class-validator';
-import { IsTimestampWithTZ } from 'src/common/decorators/isDateWithTZ.decorator';
+import { IsTimestampWithTZ } from '../../../common/decorators/isDateWithTZ.decorator';
 
 export class CreateReportDto {
   @IsNotEmpty()

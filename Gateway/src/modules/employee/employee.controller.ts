@@ -15,9 +15,9 @@ import { EmployeeService } from './employee.service';
 import { CreateEmployeeDto } from './dto/create-employee.dto';
 import { UpdateEmployeeDto } from './dto/update-employee.dto';
 import { PaginationDto } from '../../shared/pagination-dto';
-import { excludeColumns } from 'src/utils/excludeColumns';
+import { excludeColumns } from '../../utils/excludeColumns';
 import { IEmployeeWithoutPassword } from 'shared/interfaces/employee.interface';
-import { AdminGuard } from 'src/common/guards/admin.guard';
+import { AdminGuard } from '../../common/guards/admin.guard';
 
 @Controller('employee')
 export class EmployeeController {

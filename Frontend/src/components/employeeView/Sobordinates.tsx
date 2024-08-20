@@ -6,16 +6,11 @@ import TaskForm from '../TaskForm';
 import { IEmployeeId } from '../../interfaces/employeeId.interface';
 import useEmployeeRelation from '../../hooks/useEmployeeRelation';
 import useMyData from '../../hooks/useMyData';
-import { IEmployeeWithoutPassword } from '../../interfaces/employee.interface';
 
 const Sobordinates = ({ employeeId }: IEmployeeId) => {
     const { data, isLoading, isFetched } = useEmployeeRelation(employeeId);
-    const [employeeIdForPopup, setEmployeeIdForPopup] = useState(0);
     const myData = useMyData();
-
-    const findMatch = (data: IEmployeeWithoutPassword[], b: number) => {
-        return data.findIndex(f => f.employeeId == b);
-    };
+    const [employeeIdForPopup, setEmployeeIdForPopup] = useState(0);
 
     const closePopup = () => setEmployeeIdForPopup(0);
     if (isLoading && !isFetched) return <div>Loading...</div>;
@@ -35,20 +30,17 @@ const Sobordinates = ({ employeeId }: IEmployeeId) => {
                                     {emp.employeeName} {emp.employeeLastName}
                                 </p>
                                 <p>{emp.position}</p>
-                                <Button
-                                    disabled={
-                                        myData &&
-                                        findMatch(
-                                            myData.managedEmployees,
-                                            emp.employeeId
-                                        ) != -1
-                                    }
-                                    onClick={() =>
-                                        setEmployeeIdForPopup(emp.employeeId)
-                                    }
-                                >
-                                    Add task
-                                </Button>
+                                {employeeId === myData?.employeeId && (
+                                    <Button
+                                        onClick={() =>
+                                            setEmployeeIdForPopup(
+                                                emp.employeeId
+                                            )
+                                        }
+                                    >
+                                        Add task
+                                    </Button>
+                                )}
                             </li>
                         ))}
                     </ul>

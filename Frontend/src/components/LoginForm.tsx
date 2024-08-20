@@ -86,6 +86,7 @@ const LoginForm = () => {
             )}
 
             <Button
+                type="submit"
                 disabled={hasErrorsWithoutRoot}
                 title={
                     hasErrors

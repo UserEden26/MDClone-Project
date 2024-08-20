@@ -29,7 +29,7 @@
 							"query": [
 								{
 									"key": "limit",
-									"value": "1",
+									"value": "",
 									"disabled": true
 								},
 								{
@@ -237,6 +237,23 @@
 					"response": []
 				},
 				{
+					"name": "Get my data by Cookie",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}employees-relations/me",
+							"host": [
+								"{{URL}}employees-relations"
+							],
+							"path": [
+								"me"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Create employess connection",
 					"request": {
 						"method": "POST",
@@ -295,7 +312,8 @@
 							{
 								"key": "x-custom-header",
 								"value": "{{x-custom-header}}",
-								"type": "text"
+								"type": "text",
+								"disabled": true
 							}
 						],
 						"url": {
