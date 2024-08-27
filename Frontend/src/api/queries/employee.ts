@@ -1,9 +1,7 @@
-import { IEmployeeWithoutPassword } from '../../interfaces/employee.interface';
-import {
-    IPagination,
-    IReturnPagination,
-} from '../../interfaces/pagination.interface';
+import { IEmployeeWithoutPassword } from 'shared/interfaces/employee.interface';
+import { IReturnPagination } from 'shared/interfaces/pagination.interface';
 import { axiosInstance } from '../axiosConfig';
+import { FrontendPaginationType } from '../../interfaces/frontendPagination.interface';
 
 const employeePrefix = 'employee';
 
@@ -12,7 +10,7 @@ export const getEmployeeDataById = async <T>(id: number) => {
     return response.data;
 };
 
-export const getEmployees = async ({ page }: IPagination) => {
+export const getEmployees = async ({ page }: FrontendPaginationType) => {
     const response = await axiosInstance.get<
         IReturnPagination<IEmployeeWithoutPassword>
     >(employeePrefix, {

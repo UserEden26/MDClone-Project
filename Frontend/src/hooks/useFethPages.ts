@@ -5,15 +5,13 @@ import {
     InfiniteData,
 } from '@tanstack/react-query';
 import useLoadingMouse from './useLoadingMouse';
-import {
-    IPagination,
-    IReturnPagination,
-} from '../interfaces/pagination.interface';
+import { IReturnPagination } from 'shared/interfaces/pagination.interface';
+import { FrontendPaginationType } from '../interfaces/frontendPagination.interface';
 
 export const useFetchPages = <T>(
     queryKey: QueryKey,
-    queryFn: (args: IPagination) => Promise<IReturnPagination<T>>,
-    args: IPagination,
+    queryFn: (args: FrontendPaginationType) => Promise<IReturnPagination<T>>,
+    args: FrontendPaginationType,
     options?: Omit<
         UseInfiniteQueryOptions<
             IReturnPagination<T>,

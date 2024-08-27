@@ -6,7 +6,7 @@ import useMutate from '../hooks/useMutate';
 import { reportFromSchema } from '../forms/report.schema';
 import { createReport } from '../api/queries/report';
 import { useEffect } from 'react';
-import { ICreateReport } from '../interfaces/report.interface';
+import { ICreateReport } from 'shared/interfaces/report.interface';
 
 interface IReportForm {
     setClosePopUp: () => void;

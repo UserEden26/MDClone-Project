@@ -25,6 +25,7 @@
     "migration:revert": "dotenv -e .env -- npm run typeorm -- -d ./src/config/orm.config.ts migration:revert"
   },
   "dependencies": {
+    "@nestjs/cli": "^10.0.0",
     "@nestjs/cache-manager": "^2.2.2",
     "@nestjs/common": "^10.0.0",
     "@nestjs/config": "^3.2.3",
@@ -50,7 +51,6 @@
     "typeorm": "^0.3.20"
   },
   "devDependencies": {
-    "@nestjs/cli": "^10.0.0",
     "@nestjs/schematics": "^10.0.0",
     "@nestjs/testing": "^10.0.0",
     "@types/bcryptjs": "^2.4.6",

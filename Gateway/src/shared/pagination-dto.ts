@@ -5,16 +5,16 @@ export class PaginationDto implements IPagination {
   @IsInt()
   @IsOptional()
   @Min(1)
-  page?: number = 1;
+  page: number = 1;
 
   @IsOptional()
   @IsInt()
   @Min(1)
   @Max(20)
-  limit?: number = 10;
+  limit: number = 10;
 
   @IsOptional()
   @IsInt()
   @Min(1)
-  forEmp?: number;
+  forEmp: number;
 }

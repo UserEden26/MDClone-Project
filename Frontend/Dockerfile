@@ -1,29 +1,28 @@
-# Use an official Node.js image as the base image
+# Base image
 FROM node:16-alpine
 
-# Set the working directory
+# Set working directory
 WORKDIR /app
 
-# Copy package.json and package-lock.json
-COPY package*.json ./
+RUN mkdir -p ./Frontend
+
+# Copy package.json and package-lock.json from the frontend directory
+COPY Frontend/package*.json ./Frontend/
+
+# Copy the shared folder from the parent directory
+COPY ../shared ./shared
+COPY ./Frontend ./Frontend
+
+WORKDIR /app/Frontend
 
 # Install dependencies
 RUN npm install
 
-# Copy the rest of the application files
-COPY . .
-
 # Build the application
 RUN npm run build
 
-# Remove node_modules to ensure a clean production install
-RUN rm -rf node_modules
-
-# Install production dependencies only
-RUN npm ci --only=production
-
-# Copy the server file
-COPY server.js .
+# Remove development dependencies
+RUN npm prune --production
 
 # Expose the port the server will run on
 EXPOSE 8000

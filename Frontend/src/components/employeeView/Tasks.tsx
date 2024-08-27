@@ -4,8 +4,8 @@ import BorderContent from '../generic/BorderContent';
 import Button from '../generic/Button';
 import useFethPages from '../../hooks/useFethPages';
 import { IEmployeeId } from '../../interfaces/employeeId.interface';
-import { IMinimazedTask } from '../../interfaces/task.interface';
 import { formatDate } from '../../utils/timeFormatter';
+import { IMinimazedTask } from 'shared/interfaces/task.interface';
 
 const Tasks = ({ employeeId }: IEmployeeId) => {
     const {

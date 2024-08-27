@@ -1,7 +1,7 @@
 import {
     IEmployeeExternal,
     IEmployeeWithoutPassword,
-} from '../../interfaces/employee.interface';
+} from 'shared/interfaces/employee.interface';
 import { axiosInstance } from '../axiosConfig';
 
 const employeePrefix = 'employees-relations';

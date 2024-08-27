@@ -1,4 +1,4 @@
-import { ICreateReport } from '../../interfaces/report.interface';
+import { ICreateReport } from 'shared/interfaces/report.interface';
 import { axiosInstance } from '../axiosConfig';
 
 const reportPrefix = 'report';

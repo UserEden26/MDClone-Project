@@ -1,4 +1,4 @@
-import { ILogin, ILoginResponse } from '../../interfaces/auth.interface';
+import { ILogin, ILoginResponse } from 'shared/interfaces/auth.interface';
 import { axiosInstance } from '../axiosConfig';
 
 const authPrefix = 'auth';

@@ -7,7 +7,7 @@ import { login } from '../api/queries/login';
 import useMutate from '../hooks/useMutate';
 import { useNavigate } from 'react-router-dom';
 import { loginFromSchema } from '../forms/login.schema';
-import { ILogin as ILoginFields } from '../interfaces/auth.interface';
+import { ILogin as ILoginFields } from 'shared/interfaces/auth.interface';
 
 const LoginForm = () => {
     const {

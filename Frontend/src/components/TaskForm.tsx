@@ -6,7 +6,7 @@ import useMutate from '../hooks/useMutate';
 import { createTask } from '../api/queries/task';
 import { taskFromSchema } from '../forms/task.schema';
 import { useEffect } from 'react';
-import { ICreateTask } from '../interfaces/task.interface';
+import { ICreateTask } from 'shared/interfaces/task.interface';
 
 type TaskFormFieldsType = Pick<ICreateTask, 'taskText'> & {
     dueDate: string;
